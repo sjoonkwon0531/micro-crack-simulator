@@ -403,7 +403,8 @@ class ThermoelasticStress:
         thermal_profile = np.exp(-((X - x_center) / (slit_width / 4))**2)
         
         # Scale by dose and delta_T
-        dose_normalized = dose / 50.0  # Normalize to typical 50 mJ/cm²
+        # TODO: Replace with physics-based absorption model
+        dose_normalized = dose / 50.0  # Temporary normalization to typical 50 mJ/cm²
         thermal_field = delta_T * dose_normalized * thermal_profile
         
         return thermal_field
@@ -499,8 +500,9 @@ class NucleationEngine:
         
         Args:
             sigma_local: Local stress at defect [Pa]
-            flaw_size: Flaw radius [m]
-            geometry_factor: Geometric factor Y (default for penny-shaped crack)
+            flaw_size: Flaw radius [m]  
+            geometry_factor: Geometric factor Y (default 1.12 for surface semi-circular crack)
+                           Note: For embedded circular crack, Y ≈ 2/π ≈ 0.637
             
         Returns:
             Array of K_I values [Pa·m^0.5]
@@ -520,11 +522,14 @@ class NucleationEngine:
             Array of G_I/G_IC ratios
         """
         # Energy release rate: G_I = K_I² / E'
-        # For plane stress: E' = E
+        # For plane stress: E' = E  
         # For plane strain: E' = E/(1-ν²)
-        # Use plane stress for thin substrate
+        # For 6.35mm substrate thickness, plane strain may be more appropriate
+        # TODO: Consider thickness-dependent transition criterion
         
-        E_prime = ULE_GLASS["E_young"]
+        # Use plane strain for thick substrate (6.35mm >> typical crack size)
+        nu = ULE_GLASS["nu_poisson"]
+        E_prime = ULE_GLASS["E_young"] / (1 - nu**2)  # Plane strain
         G_I = K_I**2 / E_prime
         
         # Critical energy release rate
@@ -646,9 +651,13 @@ class NucleationEngine:
             
             # Estimate time to first crack (simplified)
             if len(nucleated_positions) > 0:
-                # Use subcritical crack growth model for timing
+                # Use subcritical crack growth model for timing  
                 max_ratio = np.max(griffith_ratios)
-                time_to_crack = 1.0 / max_ratio  # Simplified scaling
+                # Avoid division by zero
+                if max_ratio > 1e-12:
+                    time_to_crack = 1.0 / max_ratio  # Simplified scaling [dimensionless time]
+                else:
+                    time_to_crack = np.inf
                 first_crack_times.append(time_to_crack)
             else:
                 first_crack_times.append(np.inf)
@@ -659,8 +668,8 @@ class NucleationEngine:
             "std_nucleation_density": np.std(nucleation_densities),
             "nucleation_events": nucleation_events,
             "time_to_first_crack_stats": {
-                "mean": np.mean([t for t in first_crack_times if np.isfinite(t)]),
-                "std": np.std([t for t in first_crack_times if np.isfinite(t)]),
+                "mean": np.mean([t for t in first_crack_times if np.isfinite(t)]) if any(np.isfinite(first_crack_times)) else np.inf,
+                "std": np.std([t for t in first_crack_times if np.isfinite(t)]) if len([t for t in first_crack_times if np.isfinite(t)]) > 1 else 0.0,
                 "min": np.min([t for t in first_crack_times if np.isfinite(t)]) if any(np.isfinite(first_crack_times)) else np.inf
             }
         }

@@ -34,9 +34,9 @@ ULE_GLASS = {
     "K_0_ratio": 0.25,            # Subcritical threshold K_0/K_IC
     "hardness_vickers": 5.4e9,    # Vickers hardness [Pa]
     
-    # Thermal properties
+    # Thermal properties  
     "CTE_mean": 0.0e-9,           # Mean CTE [1/K] (zero-crossing at ~20°C)
-    "CTE_sigma": 10.0e-9,         # CTE std dev [1/K] (ppb/K)
+    "CTE_sigma": 10.0e-9,         # CTE std dev [1/K] = 10 ppb/K (parts per billion per Kelvin)
     "k_thermal": 1.31,            # Thermal conductivity [W/(m·K)]
     "cp_specific": 767.0,         # Specific heat [J/(kg·K)]
     "alpha_thermal": 7.7e-7,      # Thermal diffusivity [m²/s]
@@ -50,9 +50,9 @@ ULE_GLASS = {
     "birefringence_max": 5.0e-9,  # Max birefringence [m/cm] → 5 nm/cm
     
     # Subcritical crack growth (Charles-Hillig)
-    "scg_n": 20.0,                # Stress corrosion exponent (typical for silicates)
-    "scg_v0": 1.0e-3,             # Pre-exponential velocity [m/s]
-    "scg_delta_H": 80.0e3,        # Activation energy [J/mol]
+    "scg_n": 20.0,                # Stress corrosion exponent (typical for silicates: 15-30) [-]
+    "scg_v0": 1.0e-6,             # Pre-exponential velocity [m/s] (literature: 1e-6 to 1e-2 for glass)
+    "scg_delta_H": 80.0e3,        # Activation energy [J/mol] (silicate range: 60-120 kJ/mol)
 }
 
 # =============================================================================
@@ -87,9 +87,9 @@ SCHOTT_ZERODUR = {
     "transparency": "yellowish_tint",  # absorbs in blue/UV
     
     # Subcritical crack growth
-    "scg_n": 25.0,                # higher than ULE (ceramic phase)
-    "scg_v0": 5.0e-4,
-    "scg_delta_H": 85.0e3,       # [J/mol]
+    "scg_n": 25.0,                # higher than ULE (ceramic phase) [-]
+    "scg_v0": 5.0e-7,             # [m/s] (reduced for glass-ceramic)
+    "scg_delta_H": 85.0e3,        # [J/mol] (higher activation energy for ceramic phase)
     
     # Crack-specific: grain boundary effects
     "has_grain_boundaries": True,
@@ -125,9 +125,9 @@ OHARA_CLEARCERAM_Z = {
     "birefringence_max": 8.0e-9,  # [m/cm]
     "transparency": "yellowish_tint",
     
-    # Subcritical crack growth
-    "scg_n": 23.0,
-    "scg_v0": 7.0e-4,
+    # Subcritical crack growth  
+    "scg_n": 23.0,                # [-]
+    "scg_v0": 6.0e-7,             # [m/s] (glass-ceramic, similar to Zerodur)
     "scg_delta_H": 83.0e3,        # [J/mol]
     
     # Crack-specific
@@ -165,9 +165,9 @@ AGC_AZ = {
     "transparency": "clear",
     
     # Subcritical crack growth
-    "scg_n": 18.0,                # lower than glass-ceramics
-    "scg_v0": 2.0e-3,
-    "scg_delta_H": 75.0e3,        # [J/mol]
+    "scg_n": 18.0,                # lower than glass-ceramics [-]
+    "scg_v0": 2.0e-6,             # [m/s] (corrected for amorphous silica)
+    "scg_delta_H": 75.0e3,        # [J/mol] (lower than ULE due to purer silica)
     
     # Crack-specific
     "has_grain_boundaries": False,
@@ -203,9 +203,9 @@ SHIN_ETSU_QUARTZ = {
     "transparency": "clear",
     
     # Subcritical crack growth
-    "scg_n": 16.0,
-    "scg_v0": 3.0e-3,
-    "scg_delta_H": 72.0e3,
+    "scg_n": 16.0,                # [-] (lower for high-purity synthetic quartz)
+    "scg_v0": 3.0e-6,             # [m/s] (corrected for pure silica)
+    "scg_delta_H": 72.0e3,        # [J/mol] (lowest activation energy for pure SiO2)
     
     # Crack-specific
     "has_grain_boundaries": False,

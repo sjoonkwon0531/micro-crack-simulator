@@ -105,11 +105,20 @@ class SubcriticalGrowth:
         if K_I >= K_IC:
             return np.inf
             
-        # Charles-Hillig law
-        thermal_term = np.exp(-delta_H / (R_gas * T))
+        # Charles-Hillig law with overflow protection
+        # Prevent overflow in exponential
+        exp_arg = -delta_H / (R_gas * T)
+        if exp_arg < -700:  # exp(-700) ≈ 1e-304, near machine epsilon
+            thermal_term = 0.0
+        else:
+            thermal_term = np.exp(exp_arg)
+            
         stress_term = (K_I / K_IC) ** n
         
-        return v0 * thermal_term * stress_term
+        velocity = v0 * thermal_term * stress_term
+        
+        # Cap velocity to prevent numerical issues
+        return min(velocity, 1e10)  # Maximum 10 km/s (physically unreasonable but numerically safe)
     
     def paris_law_rate(self, delta_K: float, C: float, m: float) -> float:
         """
@@ -119,8 +128,8 @@ class SubcriticalGrowth:
         
         Args:
             delta_K: Stress intensity factor range [Pa√m]
-            C: Paris law constant [m·cycle^-1·(Pa√m)^-m]
-            m: Paris law exponent [-]
+            C: Paris law constant [m·cycle^-1·(Pa√m)^-m] (typical glass: 1e-12 to 1e-10)
+            m: Paris law exponent [-] (typical glass: 2-4, different from metals)
             
         Returns:
             Crack growth rate per cycle [m/cycle]
@@ -230,8 +239,11 @@ class SubcriticalGrowth:
             da_dN = self.paris_law_rate(delta_K, C, m)
             a_current += da_dN
             
-            # Check for unstable growth
-            if a_current * np.sqrt(np.pi) * 100e6 > self.K_IC:  # Rough estimate
+            # Check for unstable growth: K_I = σ * √(π * a) > K_IC
+            # TODO: Fix this - need proper stress field, not hardcoded 100 MPa  
+            estimated_stress = 100e6  # [Pa] - FIXME: should be from actual stress field
+            K_I_estimate = estimated_stress * np.sqrt(np.pi * a_current)
+            if K_I_estimate > self.K_IC:
                 break
                 
         return a_current
@@ -266,8 +278,10 @@ class PhaseFieldFracture:
         # Material properties
         self.E = ULE_GLASS["E_young"]
         self.nu = ULE_GLASS["nu_poisson"]
-        self.G = self.E / (2 * (1 + self.nu))  # Shear modulus
-        self.lame_lambda = self.E * self.nu / ((1 + self.nu) * (1 - 2 * self.nu))
+        self.G = self.E / (2 * (1 + self.nu))  # Shear modulus [Pa]
+        # Lame parameter for plane stress: λ' = 2Gν/(1-ν) 
+        # (not 3D bulk λ = Eν/((1+ν)(1-2ν)))
+        self.lame_lambda = 2 * self.G * self.nu / (1 - self.nu)  # Plane stress [Pa]
         
         # Residual stiffness for numerical stability
         self.k_res = 1e-6
@@ -515,6 +529,7 @@ class PhaseFieldFracture:
         
         for crack_id in range(1, n_cracks + 1):
             # Find coordinates of this crack
+            # Note: np.where returns (row, col) = (y, x) for 2D arrays
             y_coords, x_coords = np.where(labeled_cracks == crack_id)
             
             # Convert to physical coordinates (normalized 0-1)
