@@ -56,6 +56,138 @@ ULE_GLASS = {
 }
 
 # =============================================================================
+# Corning Product Line (ULE Family)
+# =============================================================================
+CORNING_ULE_7972 = {
+    "name": "Corning ULE 7972",
+    "type": "amorphous_glass",
+    "composition": "TiO2-SiO2 (~7 wt% TiO2)",
+    "application": "General precision optics, telescope mirrors, metrology",
+    "notes": "Original ULE grade; broader CTE spec than 7973",
+    
+    # Mechanical
+    "E_young": 67.6e9,
+    "nu_poisson": 0.17,
+    "rho": 2210.0,
+    "K_IC": 0.75e6,               # [Pa·m^0.5]
+    "K_0_ratio": 0.25,
+    "hardness_vickers": 5.2e9,
+    
+    # Thermal — CTE spec: 0 ± 30 ppb/°C (5-35°C), 95% CL
+    "CTE_mean": 0.0e-9,
+    "CTE_sigma": 30.0e-9,         # [1/K] — wider spec than 7973
+    "CTE_spec_range": (-30e-9, 30e-9),  # 95% confidence
+    "k_thermal": 1.31,
+    "cp_specific": 767.0,
+    "alpha_thermal": 7.7e-7,
+    "T_g": 1043.0,
+    "T_anneal": 1000.0,
+    "T_strain": 890.0,
+    
+    # Optical
+    "n_193nm": 1.5607,
+    "dn_sigma": 5.0e-7,           # [1] — less controlled than 7973
+    "birefringence_max": 10.0e-9,
+    "transparency": "clear",
+    
+    # Subcritical crack growth
+    "scg_n": 20.0,
+    "scg_v0": 1.0e-6,
+    "scg_delta_H": 80.0e3,
+    
+    # Crack-specific
+    "has_grain_boundaries": False,
+    "crack_deflection_factor": 1.0,
+    "intergranular_weakness": 1.0,
+    
+    # Grade system
+    "grades": {
+        "premium": {"inclusion_density": "lowest", "max_inclusion_mm": 0.05},
+        "mirror": {"inclusion_density": "low", "max_inclusion_mm": 0.10},
+        "standard": {"inclusion_density": "moderate", "max_inclusion_mm": 0.25},
+    },
+}
+
+CORNING_ULE_7973 = {
+    **ULE_GLASS,  # inherit all from base ULE_GLASS
+    "name": "Corning ULE 7973",
+    "type": "amorphous_glass",
+    "composition": "TiO2-SiO2 (~7.4 wt% TiO2, tailored for EUVL)",
+    "application": "EUV photomask substrates, EUVL optics",
+    "notes": "EUV-optimized grade; tighter CTE and homogeneity specs than 7972",
+    
+    # Thermal — tighter than 7972
+    "CTE_sigma": 10.0e-9,         # [1/K] — target for Extreme-ULE
+    "CTE_spec_range": (-10e-9, 10e-9),
+    
+    # Optical — tighter
+    "dn_sigma": 2.0e-7,
+    "birefringence_max": 5.0e-9,
+    
+    # Crack-specific
+    "has_grain_boundaries": False,
+    "crack_deflection_factor": 1.0,
+    "intergranular_weakness": 1.0,
+    
+    "grades": {
+        "extreme_ule": {"inclusion_density": "ultra-low", "max_inclusion_mm": 0.01,
+                        "cte_sigma_target": 5e-9, "dn_sigma_target": 1e-7},
+        "euv_premium": {"inclusion_density": "lowest", "max_inclusion_mm": 0.02,
+                        "cte_sigma_target": 10e-9, "dn_sigma_target": 2e-7},
+        "euv_standard": {"inclusion_density": "low", "max_inclusion_mm": 0.05,
+                         "cte_sigma_target": 15e-9, "dn_sigma_target": 3e-7},
+    },
+}
+
+# Hypothetical next-gen grade (for Corning R&D roadmap simulation)
+CORNING_EXTREME_ULE = {
+    "name": "Corning Extreme-ULE (Target)",
+    "type": "amorphous_glass",
+    "composition": "TiO2-SiO2 (optimized composition + advanced annealing)",
+    "application": "High-NA EUV (0.55 NA) photomask substrates",
+    "notes": "Target spec for High-NA qualification — NOT yet in production",
+    
+    # Mechanical — same base
+    "E_young": 67.6e9,
+    "nu_poisson": 0.17,
+    "rho": 2210.0,
+    "K_IC": 0.80e6,               # [Pa·m^0.5] — improved via process optimization
+    "K_0_ratio": 0.30,            # higher threshold ratio (better crack resistance)
+    "hardness_vickers": 5.5e9,
+    
+    # Thermal — aggressive targets from Corning report KPIs
+    "CTE_mean": 0.0e-9,
+    "CTE_sigma": 5.0e-9,          # [1/K] — 5 ppb/K target
+    "CTE_spec_range": (-5e-9, 5e-9),
+    "k_thermal": 1.31,
+    "cp_specific": 767.0,
+    "alpha_thermal": 7.7e-7,
+    "T_g": 1043.0,
+    "T_anneal": 1020.0,           # optimized annealing
+    "T_strain": 890.0,
+    
+    # Optical — aggressive targets
+    "n_193nm": 1.5607,
+    "dn_sigma": 1.0e-7,           # [1] — half of 7973
+    "birefringence_max": 3.0e-9,  # [m/cm] — below 5 nm/cm KPI
+    "transparency": "clear",
+    
+    # Subcritical crack growth — improved via composition control
+    "scg_n": 22.0,                # slightly better than standard ULE
+    "scg_v0": 5.0e-7,             # slower crack growth
+    "scg_delta_H": 85.0e3,        # [J/mol] — higher barrier
+    
+    # Crack-specific
+    "has_grain_boundaries": False,
+    "crack_deflection_factor": 1.0,
+    "intergranular_weakness": 1.0,
+    
+    # Defect targets
+    "target_defect_density": 1e7,  # [/m³] — 10x lower than standard
+    "target_inclusion_max": 0.005, # [mm]
+}
+
+# =============================================================================
 # Competitor Glass Materials Database
 # =============================================================================
 SCHOTT_ZERODUR = {
@@ -217,11 +349,22 @@ SHIN_ETSU_QUARTZ = {
 # Materials Comparison Registry
 # =============================================================================
 MATERIALS_DB = {
-    "corning_ule": ULE_GLASS,
+    # Corning product line
+    "corning_ule_7972": CORNING_ULE_7972,
+    "corning_ule_7973": CORNING_ULE_7973,
+    "corning_extreme_ule": CORNING_EXTREME_ULE,
+    # Competitors
     "schott_zerodur": SCHOTT_ZERODUR,
     "ohara_clearceram": OHARA_CLEARCERAM_Z,
     "agc_az": AGC_AZ,
     "shin_etsu_quartz": SHIN_ETSU_QUARTZ,
+}
+
+# Corning-only product line (for internal benchmarking)
+CORNING_PRODUCTS = {
+    "ule_7972": CORNING_ULE_7972,
+    "ule_7973": CORNING_ULE_7973,
+    "extreme_ule": CORNING_EXTREME_ULE,
 }
 
 # Comparison axes for benchmarking
