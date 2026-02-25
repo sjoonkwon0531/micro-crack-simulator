@@ -56,6 +56,188 @@ ULE_GLASS = {
 }
 
 # =============================================================================
+# Competitor Glass Materials Database
+# =============================================================================
+SCHOTT_ZERODUR = {
+    "name": "Schott Zerodur",
+    "type": "glass-ceramic",       # Li₂O-Al₂O₃-SiO₂ system
+    "composition": "Li2O-Al2O3-SiO2 (LAS glass-ceramic, ~70% crystalline β-quartz ss)",
+    "notes": "Two-phase: nanocrystalline β-quartz solid solution (negative CTE) + residual glass (positive CTE)",
+    
+    # Mechanical
+    "E_young": 90.3e9,            # [Pa] — higher than ULE due to crystalline phase
+    "nu_poisson": 0.24,
+    "rho": 2530.0,                # [kg/m³]
+    "K_IC": 0.90e6,               # [Pa·m^0.5] — slightly tougher than ULE
+    "K_0_ratio": 0.25,
+    "hardness_vickers": 6.2e9,    # [Pa] — Knoop ~620
+    
+    # Thermal
+    "CTE_mean": 0.0e-9,           # [1/K] zero-crossing tunable (0±0.02 ppm/K)
+    "CTE_sigma": 15.0e-9,         # [1/K] — typically wider spread than ULE
+    "k_thermal": 1.46,            # [W/(m·K)]
+    "cp_specific": 821.0,         # [J/(kg·K)]
+    "T_g": None,                  # Glass-ceramic: no single Tg
+    "T_max_use": 600.0,           # [°C] max continuous use
+    
+    # Optical (at 193 nm)
+    "n_193nm": 1.547,             # approximate
+    "dn_sigma": 5.0e-7,           # [1] — less uniform than ULE (grain boundaries)
+    "birefringence_max": 10.0e-9, # [m/cm] — higher due to crystallites
+    "transparency": "yellowish_tint",  # absorbs in blue/UV
+    
+    # Subcritical crack growth
+    "scg_n": 25.0,                # higher than ULE (ceramic phase)
+    "scg_v0": 5.0e-4,
+    "scg_delta_H": 85.0e3,       # [J/mol]
+    
+    # Crack-specific: grain boundary effects
+    "has_grain_boundaries": True,
+    "grain_size_nm": 50.0,        # [nm] nanocrystallites ~50nm
+    "crack_deflection_factor": 1.3,  # crack path tortuosity from grain boundaries
+    "intergranular_weakness": 0.85,  # G_IC,GB / G_IC,bulk ratio
+}
+
+OHARA_CLEARCERAM_Z = {
+    "name": "Ohara Clearceram-Z HS",
+    "type": "glass-ceramic",       # similar LAS system to Zerodur
+    "composition": "Li2O-Al2O3-SiO2 (transparent glass-ceramic)",
+    "notes": "Three grades: Regular (wide T range), HS (near RT), EX (ultra-low CTE dependence 0-50°C)",
+    
+    # Mechanical
+    "E_young": 92.0e9,            # [Pa]
+    "nu_poisson": 0.25,
+    "rho": 2550.0,                # [kg/m³]
+    "K_IC": 0.88e6,               # [Pa·m^0.5]
+    "K_0_ratio": 0.25,
+    "hardness_vickers": 6.0e9,    # [Pa]
+    
+    # Thermal
+    "CTE_mean": 0.0e-9,           # [1/K] — HS grade optimized near RT
+    "CTE_sigma": 12.0e-9,         # [1/K]
+    "k_thermal": 1.49,            # [W/(m·K)]
+    "cp_specific": 800.0,         # [J/(kg·K)]
+    "T_max_use": 550.0,           # [°C]
+    
+    # Optical
+    "n_193nm": 1.550,             # approximate
+    "dn_sigma": 4.0e-7,
+    "birefringence_max": 8.0e-9,  # [m/cm]
+    "transparency": "yellowish_tint",
+    
+    # Subcritical crack growth
+    "scg_n": 23.0,
+    "scg_v0": 7.0e-4,
+    "scg_delta_H": 83.0e3,        # [J/mol]
+    
+    # Crack-specific
+    "has_grain_boundaries": True,
+    "grain_size_nm": 40.0,         # [nm]
+    "crack_deflection_factor": 1.25,
+    "intergranular_weakness": 0.88,
+}
+
+AGC_AZ = {
+    "name": "AGC AZ (EUV substrate candidate)",
+    "type": "synthetic_quartz_modified",
+    "composition": "Modified synthetic quartz (SiO2-based, proprietary dopants)",
+    "notes": "AGC primarily a blank maker using Corning ULE; own substrate R&D ongoing",
+    
+    # Mechanical — synthetic quartz baseline
+    "E_young": 72.0e9,            # [Pa]
+    "nu_poisson": 0.17,
+    "rho": 2200.0,                # [kg/m³]
+    "K_IC": 0.70e6,               # [Pa·m^0.5]
+    "K_0_ratio": 0.20,
+    "hardness_vickers": 5.5e9,    # [Pa]
+    
+    # Thermal
+    "CTE_mean": 5.0e-7,           # [1/K] — 0.5 ppm/K (much higher than ULE!)
+    "CTE_sigma": 8.0e-9,          # [1/K]
+    "k_thermal": 1.38,            # [W/(m·K)]
+    "cp_specific": 740.0,         # [J/(kg·K)]
+    "T_max_use": 1000.0,          # [°C]
+    
+    # Optical
+    "n_193nm": 1.560,
+    "dn_sigma": 1.5e-7,           # excellent homogeneity (synthetic quartz strength)
+    "birefringence_max": 2.0e-9,  # [m/cm] — very low (amorphous)
+    "transparency": "clear",
+    
+    # Subcritical crack growth
+    "scg_n": 18.0,                # lower than glass-ceramics
+    "scg_v0": 2.0e-3,
+    "scg_delta_H": 75.0e3,        # [J/mol]
+    
+    # Crack-specific
+    "has_grain_boundaries": False,
+    "crack_deflection_factor": 1.0,  # no deflection (amorphous)
+    "intergranular_weakness": 1.0,   # N/A
+}
+
+SHIN_ETSU_QUARTZ = {
+    "name": "Shin-Etsu Synthetic Quartz (AQ series)",
+    "type": "synthetic_quartz",
+    "composition": "High-purity synthetic SiO2 (flame hydrolysis)",
+    "notes": "Primary DUV photomask substrate; EUV reference material",
+    
+    # Mechanical
+    "E_young": 73.0e9,
+    "nu_poisson": 0.17,
+    "rho": 2200.0,
+    "K_IC": 0.72e6,
+    "K_0_ratio": 0.20,
+    "hardness_vickers": 5.6e9,
+    
+    # Thermal
+    "CTE_mean": 5.5e-7,           # [1/K] — 0.55 ppm/K (standard quartz)
+    "CTE_sigma": 5.0e-9,
+    "k_thermal": 1.40,
+    "cp_specific": 746.0,
+    "T_max_use": 1160.0,
+    
+    # Optical
+    "n_193nm": 1.5607,
+    "dn_sigma": 1.0e-7,           # best-in-class homogeneity
+    "birefringence_max": 1.0e-9,
+    "transparency": "clear",
+    
+    # Subcritical crack growth
+    "scg_n": 16.0,
+    "scg_v0": 3.0e-3,
+    "scg_delta_H": 72.0e3,
+    
+    # Crack-specific
+    "has_grain_boundaries": False,
+    "crack_deflection_factor": 1.0,
+    "intergranular_weakness": 1.0,
+}
+
+# =============================================================================
+# Materials Comparison Registry
+# =============================================================================
+MATERIALS_DB = {
+    "corning_ule": ULE_GLASS,
+    "schott_zerodur": SCHOTT_ZERODUR,
+    "ohara_clearceram": OHARA_CLEARCERAM_Z,
+    "agc_az": AGC_AZ,
+    "shin_etsu_quartz": SHIN_ETSU_QUARTZ,
+}
+
+# Comparison axes for benchmarking
+COMPARISON_AXES = [
+    # (key, label, unit, lower_is_better)
+    ("CTE_sigma", "CTE Uniformity", "ppb/K", True),
+    ("K_IC", "Fracture Toughness", "MPa·m⁰·⁵", False),
+    ("E_young", "Young's Modulus", "GPa", False),
+    ("dn_sigma", "Optical Homogeneity (Δn)", "×10⁻⁷", True),
+    ("birefringence_max", "Birefringence", "nm/cm", True),
+    ("k_thermal", "Thermal Conductivity", "W/(m·K)", False),
+    ("scg_n", "SCG Exponent n", "-", False),  # higher n = more resistant
+    ("scg_delta_H", "SCG Activation Energy", "kJ/mol", False),  # higher = more resistant
+]
+
+# =============================================================================
 # EUV Exposure Conditions
 # =============================================================================
 EUV_CONDITIONS = {
