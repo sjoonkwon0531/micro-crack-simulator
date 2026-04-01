@@ -351,9 +351,15 @@ def simulate_haz_temperature(r_mm: np.ndarray, pulse_energy_uj: float, focus_dep
     cp = glass_mat.get("cp_specific", 767)  # J/(kg·K)
     
     # Peak temperature rise at center
-    volume_heated = np.pi * w0**2 * z_focus
+    # For fs laser in glass: ~30% of pulse energy couples to lattice via electron-phonon
+    # HAZ extends well beyond beam waist due to shock wave + thermal diffusion
+    # Typical HAZ: 10-50 μm radius, 20-100 μm depth (Sugioka & Cheng, APR 2014)
+    eta_coupling = 0.3  # electron-phonon coupling efficiency for fs pulses
+    r_haz = 15e-6  # effective HAZ radius (~15 μm for typical fs processing)
+    l_haz = min(z_focus, 50e-6)  # effective heating depth (capped at 50 μm)
+    volume_heated = np.pi * r_haz**2 * l_haz  # realistic HAZ volume
     mass_heated = rho * volume_heated
-    delta_T_peak = E_pulse / (mass_heated * cp)
+    delta_T_peak = eta_coupling * E_pulse / (mass_heated * cp)
     
     # Radial distribution
     T_rise = delta_T_peak * np.exp(-(r_m / w0)**2)
@@ -388,11 +394,13 @@ def simulate_haz_stress(T_distribution: np.ndarray, r_mm: np.ndarray) -> np.ndar
     
     return sigma
 
-def paris_law_crack_growth(a0: float, delta_K: float, N_cycles: int, C: float = 1e-11, m: float = 3.0) -> Tuple[np.ndarray, np.ndarray]:
+def paris_law_crack_growth(a0: float, sigma_MPa: float, Y: float, N_cycles: int, C: float = 1e-30, m: float = 15.0) -> Tuple[np.ndarray, np.ndarray]:
     """
     Paris law fatigue crack growth: da/dN = C * (ΔK)^m
+    ΔK = σ·√(πa)·Y — updated dynamically as crack grows.
     
-    Note: Fatigue model (Paris Law) for thermal cycling; subcritical growth (SCG) applies to static loading + moisture
+    Note: For glass, m=12-20 (NOT m=3 which is for metals).
+    C adjusted for glass fatigue: ~1e-30 m/cycle/(MPa·m^0.5)^m
     
     Returns: (cycles, crack_length)
     """
@@ -402,7 +410,9 @@ def paris_law_crack_growth(a0: float, delta_K: float, N_cycles: int, C: float = 
     
     for i in range(1, len(cycles)):
         dN = cycles[i] - cycles[i-1]
-        da_dN = C * (delta_K ** m)
+        # Dynamic ΔK: updates with current crack size
+        delta_K = sigma_MPa * np.sqrt(np.pi * a[i-1]) * Y  # MPa·m^0.5
+        da_dN = C * (abs(delta_K) ** m)
         a[i] = a[i-1] + da_dN * dN
         
         # Stop if crack becomes too large
@@ -886,16 +896,18 @@ with tabs[1]:
     a0_um = st.slider("Initial Crack Size (μm)", 0.1, 10.0, 1.0, 0.1, key="paris_a0")
     a0 = a0_um * 1e-6  # m
     
-    # I2: Stress intensity factor range with correct geometry factor
+    # I2: Stress intensity factor with correct geometry factor
     sigma_max_MPa = max(sigma_glass_cu, sigma_glass_mold) * 1e3  # GPa → MPa
     Y_factor = 1.12  # Y = 1.12 for edge crack (Tada, Paris & Irwin)
-    delta_K_MPa = sigma_max_MPa * np.sqrt(np.pi * a0) * Y_factor  # MPa·m^0.5
     
-    # Paris law parameters (typical for glass, ΔK in MPa·m^0.5)
-    C_paris = 1e-11  # m/cycle/(MPa·m^0.5)^m — typical for brittle glass
-    m_paris = 3.0
+    # Paris law parameters for glass (NOT metals!)
+    # Glass: m = 12-20 (vs metals m = 2-4), C adjusted accordingly
+    # Reference: Wiederhorn, JACS 1967; Lawn, Fracture of Brittle Solids
+    # Calibrated: da/dN ~ 0.1 nm/cycle at ΔK = 0.4 MPa·m^0.5 (subcritical regime)
+    C_paris = 9.3e-5  # m/cycle/(MPa·m^0.5)^m — calibrated for glass with m=15
+    m_paris = 15.0    # stress corrosion exponent for borosilicate glass
     
-    cycles, crack_length = paris_law_crack_growth(a0, delta_K_MPa, n_cycles_thermal, C_paris, m_paris)
+    cycles, crack_length = paris_law_crack_growth(a0, sigma_max_MPa, Y_factor, n_cycles_thermal, C_paris, m_paris)
     
     fig_paris = go.Figure()
     fig_paris.add_trace(go.Scatter(
