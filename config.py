@@ -739,7 +739,7 @@ DEFECT_MODEL = {
 # =============================================================================
 NUCLEATION = {
     "mc_runs": 10000,                # Monte Carlo realizations
-    "griffith_gamma_s": 4.5,         # Surface energy [J/m²] for ULE glass
+    "griffith_gamma_s": 3.0,         # Surface energy [J/m²] for ULE glass (mid-range literature value)
     "stress_concentration_factor": 2.0,  # Kt for elliptical flaw
     "thermal_cycles_max": 1e6,       # Max exposure cycles to simulate
     "nucleation_threshold": 0.9,     # G_I/G_IC threshold for nucleation

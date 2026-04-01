@@ -218,7 +218,7 @@ class SubcriticalGrowth:
         delta_K: float, 
         n_cycles: int, 
         C: float = 1e-12, 
-        m: float = 3.0
+        m: float = 15.0  # Glass fatigue: m=12-20 (NOT m=3 which is for metals)
     ) -> float:
         """
         Cumulative crack growth under thermal cycling
