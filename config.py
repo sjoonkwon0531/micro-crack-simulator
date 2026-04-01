@@ -346,6 +346,212 @@ SHIN_ETSU_QUARTZ = {
 }
 
 # =============================================================================
+# Glass Core/Interposer Materials for Advanced Packaging
+# =============================================================================
+CORNING_GLASS_CORE = {
+    "name": "Corning Glass Core Substrate",
+    "type": "borosilicate_glass",
+    "composition": "Borosilicate glass optimized for CTE matching",
+    "application": "Glass interposer, high-density packaging, TGV applications",
+    "notes": "Advanced packaging substrate with CTE matched to silicon",
+    
+    # Mechanical properties
+    "E_young": 73.5e9,            # [Pa] Young's modulus (typical borosilicate range)
+    "nu_poisson": 0.21,           # Poisson's ratio
+    "rho": 2230.0,                # [kg/m³] density
+    "K_IC": 0.80e6,               # [Pa·m^0.5] fracture toughness 
+    "K_0_ratio": 0.30,            # Subcritical threshold
+    "hardness_vickers": 5.1e9,    # [Pa] Vickers hardness
+    
+    # Thermal properties
+    "CTE_mean": 4.0e-6,           # [1/K] 4 ppm/K - matched to Si (3.2 ppm/K)
+    "CTE_sigma": 0.2e-6,          # [1/K] tight control ±0.2 ppm/K
+    "k_thermal": 1.2,             # [W/(m·K)] thermal conductivity
+    "cp_specific": 830.0,         # [J/(kg·K)] specific heat
+    "T_g": 560.0,                 # [°C] glass transition
+    "T_max_use": 360.0,           # [°C] max use temperature
+    
+    # Optical properties
+    "n_visible": 1.5,             # refractive index at 589nm
+    "transparency": "clear",
+    
+    # Subcritical crack growth
+    "scg_n": 20.0,                # stress corrosion exponent
+    "scg_v0": 1.0e-6,             # [m/s] pre-exponential velocity
+    "scg_delta_H": 80.0e3,        # [J/mol] activation energy
+    
+    # Crack-specific
+    "has_grain_boundaries": False,
+    "crack_deflection_factor": 1.0,
+    "intergranular_weakness": 1.0,
+}
+
+AGC_AN100 = {
+    "name": "AGC AN100",
+    "type": "borosilicate_glass",
+    "composition": "Alkali-free borosilicate glass",
+    "application": "Display glass, potential interposer substrate",
+    "notes": "Low alkali content for better electrical properties",
+    
+    # Mechanical
+    "E_young": 72.0e9,
+    "nu_poisson": 0.22,
+    "rho": 2240.0,
+    "K_IC": 0.75e6,
+    "K_0_ratio": 0.25,
+    "hardness_vickers": 5.0e9,
+    
+    # Thermal
+    "CTE_mean": 3.7e-6,           # [1/K] 3.7 ppm/K
+    "CTE_sigma": 0.3e-6,          # [1/K]
+    "k_thermal": 1.1,             # [W/(m·K)]
+    "cp_specific": 840.0,
+    "T_g": 580.0,
+    "T_max_use": 350.0,
+    
+    # Optical
+    "n_visible": 1.51,
+    "transparency": "clear",
+    
+    # Subcritical crack growth
+    "scg_n": 18.0,
+    "scg_v0": 1.2e-6,
+    "scg_delta_H": 78.0e3,
+    
+    # Crack-specific
+    "has_grain_boundaries": False,
+    "crack_deflection_factor": 1.0,
+    "intergranular_weakness": 1.0,
+}
+
+SCHOTT_BOROFLOAT = {
+    "name": "Schott Borofloat 33",
+    "type": "borosilicate_glass", 
+    "composition": "Borosilicate glass 3.3",
+    "application": "Research substrate, TGV development",
+    "notes": "Standard laboratory borosilicate, reference material",
+    
+    # Mechanical
+    "E_young": 67.0e9,
+    "nu_poisson": 0.21,
+    "rho": 2230.0,
+    "K_IC": 0.78e6,
+    "K_0_ratio": 0.25,
+    "hardness_vickers": 5.1e9,
+    
+    # Thermal  
+    "CTE_mean": 3.25e-6,          # [1/K] 3.25 ppm/K
+    "CTE_sigma": 0.15e-6,         # [1/K]
+    "k_thermal": 1.2,
+    "cp_specific": 830.0,
+    "T_g": 525.0,
+    "T_max_use": 450.0,
+    
+    # Optical
+    "n_visible": 1.47,
+    "transparency": "clear",
+    
+    # Subcritical crack growth
+    "scg_n": 20.0,
+    "scg_v0": 1.0e-6,
+    "scg_delta_H": 80.0e3,
+    
+    # Crack-specific
+    "has_grain_boundaries": False,
+    "crack_deflection_factor": 1.0,
+    "intergranular_weakness": 1.0,
+}
+
+NEG_EAGLEXG = {
+    "name": "NEG Eagle XG (Alternative)",
+    "type": "borosilicate_glass",
+    "composition": "Alkali-free borosilicate, lead-free",
+    "application": "Advanced LCD, potential packaging substrate",
+    "notes": "Environmental friendly formulation",
+    
+    # Mechanical
+    "E_young": 73.0e9,
+    "nu_poisson": 0.22,
+    "rho": 2250.0,
+    "K_IC": 0.77e6,
+    "K_0_ratio": 0.25,
+    "hardness_vickers": 5.2e9,
+    
+    # Thermal
+    "CTE_mean": 3.8e-6,           # [1/K]
+    "CTE_sigma": 0.25e-6,
+    "k_thermal": 1.15,
+    "cp_specific": 820.0,
+    "T_g": 570.0,
+    "T_max_use": 340.0,
+    
+    # Optical
+    "n_visible": 1.52,
+    "transparency": "clear",
+    
+    # Subcritical crack growth
+    "scg_n": 19.0,
+    "scg_v0": 1.1e-6,
+    "scg_delta_H": 79.0e3,
+    
+    # Crack-specific
+    "has_grain_boundaries": False,
+    "crack_deflection_factor": 1.0,
+    "intergranular_weakness": 1.0,
+}
+
+# =============================================================================
+# TGV (Through Glass Via) Processing Parameters
+# =============================================================================
+TGV_PROCESSING = {
+    "laser_drilling": {
+        # Femtosecond laser parameters
+        "wavelength": 1030e-9,            # [m] Yb:KGW laser wavelength
+        "pulse_duration_range": (200e-15, 800e-15),  # [s] femtosecond range
+        "pulse_duration_typical": 350e-15, # [s] 
+        "pulse_energy_range": (1e-6, 300e-6),  # [J] 1-300 μJ
+        "pulse_energy_optimal": 50e-6,     # [J] 50 μJ optimal
+        "repetition_rate": (1e3, 1e6),    # [Hz] 1kHz - 1MHz
+        "burst_mode": True,
+        "burst_pulses": (1, 50),          # pulses per burst
+        "burst_separation": 213e-12,      # [s] 213 ps
+        
+        # Via geometry
+        "via_diameter_range": (5e-6, 100e-6),    # [m] 5-100 μm
+        "via_diameter_typical": 25e-6,     # [m] 25 μm
+        "aspect_ratio_max": 80,           # depth/diameter
+        "taper_angle_range": (0.5, 5.0), # [degrees]
+        "taper_angle_target": 1.0,        # [degrees]
+        
+        # Process quality metrics
+        "roughness_target": 100e-9,       # [m] Ra < 100 nm
+        "chipping_max": 2e-6,             # [m] < 2 μm edge chipping
+        "crack_formation_threshold": 0.1,  # probability
+        
+        # Glass thickness range
+        "thickness_range": (50e-6, 500e-6),  # [m] 50-500 μm
+        "thickness_typical": 200e-6,       # [m] 200 μm Borofloat
+    },
+    
+    "metallization": {
+        "seed_layer": "Ti/Cu",
+        "seed_thickness": (20e-9, 100e-9),   # [m] Ti: 20nm, Cu: 100nm
+        "fill_material": "Cu",
+        "electroplating_current": (1, 50),    # [mA/cm²]
+        "annealing_temp": (150, 250),        # [°C]
+        "via_fill_quality": 0.95,           # target fill fraction
+    },
+    
+    "chemical_etching": {
+        "etchant": "HF",
+        "concentration_range": (5, 49),      # [wt%] HF concentration
+        "etch_rate": (0.1e-6, 2.0e-6),     # [m/min] depends on concentration
+        "selectivity_glass_metal": 1000,    # etch rate ratio
+        "surface_finish": "smooth",
+    },
+}
+
+# =============================================================================
 # Materials Comparison Registry
 # =============================================================================
 MATERIALS_DB = {
@@ -353,7 +559,12 @@ MATERIALS_DB = {
     "corning_ule_7972": CORNING_ULE_7972,
     "corning_ule_7973": CORNING_ULE_7973,
     "corning_extreme_ule": CORNING_EXTREME_ULE,
-    # Competitors
+    # Glass core/interposer materials
+    "corning_glass_core": CORNING_GLASS_CORE,
+    "agc_an100": AGC_AN100,
+    "schott_borofloat": SCHOTT_BOROFLOAT,
+    "neg_eaglexg": NEG_EAGLEXG,
+    # Competitors (existing)
     "schott_zerodur": SCHOTT_ZERODUR,
     "ohara_clearceram": OHARA_CLEARCERAM_Z,
     "agc_az": AGC_AZ,
