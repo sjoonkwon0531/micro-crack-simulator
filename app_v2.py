@@ -61,23 +61,47 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Corning Blue Brand Color
-CORNING_BLUE = "#0072CE"
-CORNING_LIGHT_BLUE = "#4DA8E8"
-CORNING_DARK_BLUE = "#00508E"
-SUCCESS_GREEN = "#28A745"
-WARNING_ORANGE = "#FD7E14"
-DANGER_RED = "#DC3545"
+# Dark Mode Design System Colors (from DESIGN.md)
+# Backgrounds
+CANVAS_BLACK = "#08090a"
+PANEL_DARK = "#0f1011"
+SURFACE = "#191a1b"
+SURFACE_HOVER = "#28282c"
+
+# Text
+PRIMARY_TEXT = "#f7f8f8"
+SECONDARY_TEXT = "#d0d6e0"
+TERTIARY_TEXT = "#8a8f98"
+MUTED_TEXT = "#62666d"
+
+# Corning Blue Brand
+CORNING_BLUE = "#0066B1"
+CORNING_LIGHT_BLUE = "#4A9FD9"
+CORNING_HOVER_BLUE = "#7BB8E3"
+CORNING_DARK_BLUE = "#003D6B"
+
+# Status Colors
+SUCCESS_GREEN = "#10b981"
+WARNING_ORANGE = "#f59e0b"
+DANGER_RED = "#ef4444"
+PURPLE = "#8b5cf6"
+
+# Borders
+BORDER_SUBTLE = "rgba(255,255,255,0.05)"
+BORDER_STANDARD = "rgba(255,255,255,0.08)"
+BORDER_ACCENT = "rgba(0,102,177,0.3)"
 
 # =============================================================================
-# Custom CSS - Executive-Ready White Theme
+# Custom CSS - Dark Mode Professional Theme
 # =============================================================================
 st.markdown(f"""
 <style>
-    /* Base theme */
+    /* Base theme - Dark mode */
     .stApp {{ 
-        background-color: #ffffff; 
+        background-color: {CANVAS_BLACK}; 
+        color: {PRIMARY_TEXT};
     }}
+    
     .block-container {{ 
         padding-top: 1.5rem; 
         padding-bottom: 2rem;
@@ -86,78 +110,130 @@ st.markdown(f"""
     
     /* Typography */
     h1, h2, h3, h4 {{ 
-        color: #1a1a2e; 
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: {PRIMARY_TEXT}; 
+        font-family: Inter, -apple-system, system-ui, sans-serif;
+        font-weight: 600;
     }}
+    
     h1 {{
         border-bottom: 3px solid {CORNING_BLUE};
         padding-bottom: 10px;
         margin-bottom: 5px;
     }}
     
-    /* Tabs */
-    .stTabs [data-baseweb="tab-list"] {{ 
-        gap: 6px; 
-        background-color: #f8f9fa;
-        padding: 8px;
-        border-radius: 8px;
+    p, li, div {{
+        color: {SECONDARY_TEXT};
     }}
+    
+    /* Tabs - Clean dark styling */
+    .stTabs [data-baseweb="tab-list"] {{ 
+        gap: 8px; 
+        background-color: {PANEL_DARK};
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid {BORDER_STANDARD};
+    }}
+    
     .stTabs [data-baseweb="tab"] {{
-        background-color: #ffffff; 
-        border-radius: 6px 6px 0 0;
+        background-color: transparent; 
+        border-radius: 6px;
         padding: 10px 20px; 
         font-size: 0.95rem;
         font-weight: 500;
-        border: 1px solid #dee2e6;
-        color: #495057;
+        border: none;
+        color: {TERTIARY_TEXT};
+        transition: all 0.2s ease;
     }}
+    
+    .stTabs [data-baseweb="tab"]:hover {{
+        color: {SECONDARY_TEXT};
+        background-color: rgba(255,255,255,0.03);
+    }}
+    
     .stTabs [aria-selected="true"] {{
-        background-color: #ffffff; 
-        border-bottom: 3px solid {CORNING_BLUE};
-        color: {CORNING_BLUE};
+        background-color: rgba(0,102,177,0.1); 
+        border-bottom: 2px solid {CORNING_BLUE};
+        color: {CORNING_LIGHT_BLUE};
         font-weight: 600;
     }}
     
-    /* Metric cards */
+    /* Metric cards - Premium dark design */
     .metric-card {{
-        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-        border-radius: 10px; 
-        padding: 16px 20px;
-        border-left: 4px solid {CORNING_BLUE}; 
+        background: rgba(255,255,255,0.03);
+        border-radius: 12px; 
+        padding: 20px;
+        border: 1px solid {BORDER_STANDARD};
         margin-bottom: 12px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-    }}
-    .metric-card-success {{
-        border-left-color: {SUCCESS_GREEN};
-    }}
-    .metric-card-warning {{
-        border-left-color: {WARNING_ORANGE};
-    }}
-    .metric-card-danger {{
-        border-left-color: {DANGER_RED};
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        transition: all 0.2s ease;
     }}
     
-    /* Info boxes */
+    .metric-card:hover {{
+        background: rgba(255,255,255,0.05);
+    }}
+    
+    .metric-card-success {{
+        border-left: 3px solid {SUCCESS_GREEN};
+    }}
+    
+    .metric-card-warning {{
+        border-left: 3px solid {WARNING_ORANGE};
+    }}
+    
+    .metric-card-danger {{
+        border-left: 3px solid {DANGER_RED};
+    }}
+    
+    .metric-card-default {{
+        border-left: 3px solid {CORNING_BLUE};
+    }}
+    
+    /* Streamlit native metric styling */
+    [data-testid="stMetricValue"] {{
+        color: {PRIMARY_TEXT};
+        font-size: 1.8rem;
+        font-weight: 700;
+    }}
+    
+    [data-testid="stMetricLabel"] {{
+        color: {TERTIARY_TEXT};
+        font-size: 0.85rem;
+        font-weight: 500;
+    }}
+    
+    [data-testid="stMetricDelta"] {{
+        font-size: 0.85rem;
+    }}
+    
+    /* Info/warning/error boxes */
     .stAlert {{
         border-radius: 8px;
-        border-left-width: 4px;
+        border-left-width: 3px;
+        background-color: rgba(255,255,255,0.03);
     }}
     
-    /* Sidebar */
-    .css-1d391kg {{
-        background-color: #f8f9fa;
+    .stAlert [data-testid="stMarkdownContainer"] p {{
+        color: {SECONDARY_TEXT};
     }}
+    
+    /* Sidebar - Dark panel */
     section[data-testid="stSidebar"] {{
-        background-color: #f8f9fa;
-        border-right: 2px solid {CORNING_BLUE};
+        background-color: {PANEL_DARK};
+        border-right: 1px solid {BORDER_STANDARD};
     }}
+    
     section[data-testid="stSidebar"] h1, 
     section[data-testid="stSidebar"] h2,
     section[data-testid="stSidebar"] h3 {{
-        color: {CORNING_BLUE};
+        color: {PRIMARY_TEXT};
     }}
     
-    /* Buttons */
+    section[data-testid="stSidebar"] p,
+    section[data-testid="stSidebar"] label {{
+        color: {SECONDARY_TEXT};
+    }}
+    
+    /* Buttons - Corning Blue primary */
     .stButton>button {{
         background-color: {CORNING_BLUE};
         color: white;
@@ -165,15 +241,62 @@ st.markdown(f"""
         border: none;
         padding: 0.5rem 1.5rem;
         font-weight: 500;
+        transition: all 0.2s ease;
     }}
+    
     .stButton>button:hover {{
-        background-color: {CORNING_DARK_BLUE};
+        background-color: {CORNING_HOVER_BLUE};
     }}
     
     /* Download button */
     .stDownloadButton>button {{
         background-color: {SUCCESS_GREEN};
         color: white;
+        border-radius: 6px;
+    }}
+    
+    .stDownloadButton>button:hover {{
+        background-color: #0d9668;
+    }}
+    
+    /* Inputs - Dark themed */
+    .stTextInput>div>div>input,
+    .stNumberInput>div>div>input,
+    .stSelectbox>div>div>div {{
+        background-color: {SURFACE};
+        color: {PRIMARY_TEXT};
+        border: 1px solid {BORDER_STANDARD};
+        border-radius: 6px;
+    }}
+    
+    /* Sliders */
+    .stSlider>div>div>div>div {{
+        background-color: {CORNING_BLUE};
+    }}
+    
+    /* Dataframes */
+    .stDataFrame {{
+        border: 1px solid {BORDER_STANDARD};
+        border-radius: 8px;
+    }}
+    
+    /* Expander */
+    .streamlit-expanderHeader {{
+        background-color: rgba(255,255,255,0.03);
+        border: 1px solid {BORDER_STANDARD};
+        border-radius: 6px;
+        color: {SECONDARY_TEXT};
+    }}
+    
+    .streamlit-expanderHeader:hover {{
+        background-color: rgba(255,255,255,0.05);
+    }}
+    
+    /* Caption text */
+    .caption, small, .stCaption {{
+        color: {TERTIARY_TEXT} !important;
+        font-size: 0.85rem;
+        font-style: italic;
     }}
     
     /* Footer */
@@ -182,12 +305,17 @@ st.markdown(f"""
         bottom: 0;
         left: 0;
         right: 0;
-        background: linear-gradient(90deg, {CORNING_BLUE} 0%, {CORNING_DARK_BLUE} 100%);
+        background: linear-gradient(90deg, {CORNING_DARK_BLUE} 0%, {CORNING_BLUE} 100%);
         color: white;
         text-align: center;
         padding: 8px;
         font-size: 0.85rem;
         z-index: 999;
+    }}
+    
+    /* Plotly chart containers */
+    .js-plotly-plot {{
+        background-color: transparent !important;
     }}
 </style>
 """, unsafe_allow_html=True)
@@ -285,7 +413,7 @@ st.sidebar.caption("v2.0.0 · Executive Demo Edition · 2026-04-01")
 # =============================================================================
 st.title("Glass Core/Interposer Micro-Crack Lifecycle Simulator")
 st.markdown(f"""
-<p style='font-size: 1.1rem; color: {CORNING_DARK_BLUE}; margin-top: -10px;'>
+<p style='font-size: 1.1rem; color: {CORNING_LIGHT_BLUE}; margin-top: -10px;'>
     <strong>Corning × SKKU SPMDL</strong> | AI-Driven Materials & Process Intelligence
 </p>
 """, unsafe_allow_html=True)
@@ -297,32 +425,43 @@ st.markdown(f"**Selected Material:** {glass_mat['name']} | **Thickness:** {glass
 # =============================================================================
 
 def create_metric_card(label: str, value: str, delta: str = None, card_type: str = "default"):
-    """Create a styled metric card."""
-    card_class = "metric-card"
-    if card_type == "success":
-        card_class += " metric-card-success"
-    elif card_type == "warning":
-        card_class += " metric-card-warning"
-    elif card_type == "danger":
-        card_class += " metric-card-danger"
+    """Create a styled metric card with dark theme."""
+    card_class = "metric-card metric-card-" + card_type
     
-    delta_html = f"<p style='margin: 0; font-size: 0.85rem; color: #6c757d;'>{delta}</p>" if delta else ""
+    delta_html = f"<p style='margin: 0; font-size: 0.85rem; color: {TERTIARY_TEXT};'>{delta}</p>" if delta else ""
     
     return f"""
     <div class='{card_class}'>
-        <p style='margin: 0; font-size: 0.85rem; color: #6c757d; font-weight: 500;'>{label}</p>
-        <p style='margin: 5px 0 0 0; font-size: 1.8rem; font-weight: 700; color: #1a1a2e;'>{value}</p>
+        <p style='margin: 0; font-size: 0.85rem; color: {TERTIARY_TEXT}; font-weight: 500;'>{label}</p>
+        <p style='margin: 5px 0 0 0; font-size: 1.8rem; font-weight: 700; color: {PRIMARY_TEXT};'>{value}</p>
         {delta_html}
     </div>
     """
 
 def plotly_theme():
-    """Return Plotly layout for consistent theming."""
+    """Return Plotly layout for dark theme consistency."""
     return dict(
-        template="plotly_white",
-        font=dict(family="Segoe UI, sans-serif", size=12),
-        title_font=dict(size=16, color=CORNING_DARK_BLUE),
-        colorway=[CORNING_BLUE, CORNING_LIGHT_BLUE, SUCCESS_GREEN, WARNING_ORANGE, DANGER_RED],
+        template="plotly_dark",
+        paper_bgcolor=PANEL_DARK,
+        plot_bgcolor=PANEL_DARK,
+        font=dict(family="Inter, -apple-system, system-ui, sans-serif", size=12, color=SECONDARY_TEXT),
+        title_font=dict(size=16, color=PRIMARY_TEXT, family="Inter"),
+        colorway=[CORNING_BLUE, CORNING_LIGHT_BLUE, SUCCESS_GREEN, WARNING_ORANGE, DANGER_RED, PURPLE],
+        xaxis=dict(
+            gridcolor=BORDER_SUBTLE,
+            zerolinecolor=BORDER_STANDARD,
+            color=SECONDARY_TEXT
+        ),
+        yaxis=dict(
+            gridcolor=BORDER_SUBTLE,
+            zerolinecolor=BORDER_STANDARD,
+            color=SECONDARY_TEXT
+        ),
+        legend=dict(
+            bgcolor="rgba(0,0,0,0)",
+            bordercolor=BORDER_STANDARD,
+            font=dict(color=SECONDARY_TEXT)
+        )
     )
 
 def simulate_haz_temperature(r_mm: np.ndarray, pulse_energy_uj: float, focus_depth_um: float, pulse_duration: float = 500e-15) -> np.ndarray:
@@ -548,7 +687,7 @@ with tabs[0]:
             mode='lines',
             line=dict(color=CORNING_BLUE, width=3),
             fill='tozeroy',
-            fillcolor=f'rgba(0, 114, 206, 0.2)',
+            fillcolor=f'rgba(0, 102, 177, 0.2)',
             name='Temperature'
         ))
         
@@ -592,7 +731,7 @@ with tabs[0]:
             mode='lines',
             line=dict(color=WARNING_ORANGE, width=3),
             fill='tozeroy',
-            fillcolor=f'rgba(253, 126, 20, 0.2)',
+            fillcolor=f'rgba(245, 158, 11, 0.2)',
             name='Stress'
         ))
         
@@ -647,7 +786,7 @@ with tabs[0]:
         y=rep_rates,
         z=crack_prob,
         colorscale=[[0, SUCCESS_GREEN], [0.5, WARNING_ORANGE], [1, DANGER_RED]],
-        colorbar=dict(title="Crack Probability", tickformat=".2f"),
+        colorbar=dict(title="Crack Probability", tickformat=".2f", tickfont=dict(color=SECONDARY_TEXT)),
         hovertemplate='Pulse: %{x:.0f} μJ<br>Rep Rate: %{y:.0f} kHz<br>Crack Prob: %{z:.2f}<extra></extra>'
     ))
     
@@ -775,11 +914,11 @@ with tabs[1]:
             mode='lines',
             line=dict(color=CORNING_BLUE, width=2),
             fill='tozeroy',
-            fillcolor=f'rgba(0, 114, 206, 0.1)',
+            fillcolor=f'rgba(0, 102, 177, 0.1)',
             name='Temperature'
         ))
         
-        fig_temp_cycle.add_hline(y=0, line_dash="dot", line_color="gray", annotation_text="0°C")
+        fig_temp_cycle.add_hline(y=0, line_dash="dot", line_color=TERTIARY_TEXT, annotation_text="0°C")
         fig_temp_cycle.add_hline(y=T_max, line_dash="dash", line_color=DANGER_RED,
                                 annotation_text=f"Max = {T_max}°C", annotation_position="right")
         fig_temp_cycle.add_hline(y=T_min, line_dash="dash", line_color=CORNING_LIGHT_BLUE,
@@ -837,7 +976,7 @@ with tabs[1]:
             mode='lines',
             line=dict(color=WARNING_ORANGE, width=3),
             fill='tozerox',
-            fillcolor=f'rgba(253, 126, 20, 0.2)',
+            fillcolor=f'rgba(245, 158, 11, 0.2)',
         ))
         
         fig_stress_cu.update_layout(
@@ -868,7 +1007,7 @@ with tabs[1]:
             mode='lines',
             line=dict(color=CORNING_BLUE, width=3),
             fill='tozerox',
-            fillcolor=f'rgba(0, 114, 206, 0.2)',
+            fillcolor=f'rgba(0, 102, 177, 0.2)',
         ))
         
         fig_stress_mold.update_layout(
@@ -920,7 +1059,7 @@ with tabs[1]:
     
     # Failure criterion: crack length > 100 μm
     failure_threshold = 100  # μm
-    fig_paris.add_hline(y=failure_threshold, line_dash="dash", line_color="black",
+    fig_paris.add_hline(y=failure_threshold, line_dash="dash", line_color=PRIMARY_TEXT,
                        annotation_text=f"Failure threshold = {failure_threshold} μm",
                        annotation_position="right")
     
@@ -1030,7 +1169,8 @@ with tabs[2]:
         y=detection_probs,
         marker_color=colors_detect,
         text=[f"{p:.0%}" for p in detection_probs],
-        textposition='outside'
+        textposition='outside',
+        textfont=dict(color=PRIMARY_TEXT)
     ))
     
     fig_detect.add_hline(y=0.9, line_dash="dash", line_color=SUCCESS_GREEN,
@@ -1095,7 +1235,7 @@ with tabs[2]:
     fig_fusion.add_trace(go.Scatter(x=depths_scan, y=fusion_profile, name="Fusion",
                                     line=dict(color=SUCCESS_GREEN, width=3)))
     
-    fig_fusion.add_vline(x=crack_depth, line_dash="dash", line_color="gray",
+    fig_fusion.add_vline(x=crack_depth, line_dash="dash", line_color=TERTIARY_TEXT,
                         annotation_text=f"Crack @ {crack_depth:.1f}μm")
     
     fig_fusion.update_layout(
@@ -1236,15 +1376,15 @@ with tabs[3]:
     fig_bayes = go.Figure()
     fig_bayes.add_trace(go.Scatter(x=x, y=prior_pdf, name="Prior (Physics Model)",
                                    line=dict(color=CORNING_LIGHT_BLUE, width=2, dash='dash'),
-                                   fill='tozeroy', fillcolor='rgba(77, 168, 232, 0.1)'))
+                                   fill='tozeroy', fillcolor='rgba(74, 159, 217, 0.1)'))
     fig_bayes.add_trace(go.Scatter(x=x, y=likelihood_pdf, name="Likelihood (Measurements)",
                                    line=dict(color=WARNING_ORANGE, width=2, dash='dot'),
-                                   fill='tozeroy', fillcolor='rgba(253, 126, 20, 0.1)'))
+                                   fill='tozeroy', fillcolor='rgba(245, 158, 11, 0.1)'))
     fig_bayes.add_trace(go.Scatter(x=x, y=posterior_pdf, name="Posterior (Bayesian Fusion)",
                                    line=dict(color=SUCCESS_GREEN, width=3),
-                                   fill='tozeroy', fillcolor='rgba(40, 167, 69, 0.2)'))
+                                   fill='tozeroy', fillcolor='rgba(16, 185, 129, 0.2)'))
     
-    fig_bayes.add_vline(x=true_crack_size, line_dash="dash", line_color="black",
+    fig_bayes.add_vline(x=true_crack_size, line_dash="dash", line_color=PRIMARY_TEXT,
                        annotation_text=f"True Value = {true_crack_size:.1f} μm")
     
     fig_bayes.update_layout(
@@ -1345,7 +1485,8 @@ with tabs[4]:
             y=values,
             marker_color=[DANGER_RED if v > 25 else WARNING_ORANGE if v > 15 else CORNING_BLUE for v in values],
             text=[f"{v:.1f}%" for v in values],
-            textposition='outside'
+            textposition='outside',
+            textfont=dict(color=PRIMARY_TEXT)
         ))
         
         fig_waterfall.update_layout(
@@ -1505,7 +1646,8 @@ with tabs[5]:
         fig_radar.update_layout(
             **plotly_theme(),
             polar=dict(
-                radialaxis=dict(visible=True, range=[0, 1])
+                radialaxis=dict(visible=True, range=[0, 1], gridcolor=BORDER_SUBTLE),
+                angularaxis=dict(gridcolor=BORDER_SUBTLE)
             ),
             title="Material Performance Radar (Normalized)",
             height=500
@@ -1533,7 +1675,8 @@ with tabs[5]:
             y=values,
             marker_color=colors_bar,
             text=[f"{v:.2f}" for v in values],
-            textposition='outside'
+            textposition='outside',
+            textfont=dict(color=PRIMARY_TEXT)
         ))
         
         # Highlight best value
@@ -1552,7 +1695,8 @@ with tabs[5]:
             arrowhead=2,
             arrowcolor=SUCCESS_GREEN,
             ax=0,
-            ay=-40
+            ay=-40,
+            font=dict(color=PRIMARY_TEXT)
         )
         
         fig_bar.update_layout(
@@ -1678,7 +1822,7 @@ with tabs[6]:
                 line=dict(color=WARNING_ORANGE, width=3),
                 marker=dict(size=6),
                 fill='tozeroy',
-                fillcolor='rgba(253, 126, 20, 0.2)',
+                fillcolor='rgba(245, 158, 11, 0.2)',
                 name='UCB Acquisition'
             ))
             
@@ -2065,7 +2209,7 @@ with tabs[8]:
         line=dict(color=DANGER_RED, width=2, dash='dash'),
         name='Cumulative Investment',
         fill='tozeroy',
-        fillcolor='rgba(220, 53, 69, 0.1)'
+        fillcolor='rgba(239, 68, 68, 0.1)'
     ))
     
     fig_roi.add_trace(go.Scatter(
@@ -2074,7 +2218,7 @@ with tabs[8]:
         line=dict(color=SUCCESS_GREEN, width=3),
         name='Cumulative Savings',
         fill='tozeroy',
-        fillcolor='rgba(40, 167, 69, 0.1)'
+        fillcolor='rgba(16, 185, 129, 0.1)'
     ))
     
     fig_roi.add_trace(go.Scatter(
@@ -2085,11 +2229,11 @@ with tabs[8]:
         name='Net Value',
     ))
     
-    fig_roi.add_hline(y=0, line_dash="dot", line_color="gray")
+    fig_roi.add_hline(y=0, line_dash="dot", line_color=TERTIARY_TEXT)
     
     # Mark break-even point
     if payback_period < 5:
-        fig_roi.add_vline(x=payback_period, line_dash="dash", line_color="black",
+        fig_roi.add_vline(x=payback_period, line_dash="dash", line_color=PRIMARY_TEXT,
                          annotation_text=f"Break-even: {payback_period:.1f} yr")
     
     fig_roi.update_layout(
@@ -2121,7 +2265,7 @@ with tabs[8]:
     
     fig_comp = go.Figure()
     
-    colors_comp = [SUCCESS_GREEN, "#999", "#999", "#999"]
+    colors_comp = [SUCCESS_GREEN, TERTIARY_TEXT, TERTIARY_TEXT, TERTIARY_TEXT]
     
     for i, comp in enumerate(competitors):
         values = [positioning_metrics[cat][i] for cat in categories_comp]
@@ -2135,12 +2279,15 @@ with tabs[8]:
             name=comp,
             line=dict(color=colors_comp[i], width=line_width),
             fill='toself' if comp == "Corning" else None,
-            fillcolor='rgba(40, 167, 69, 0.2)' if comp == "Corning" else None
+            fillcolor='rgba(16, 185, 129, 0.2)' if comp == "Corning" else None
         ))
     
     fig_comp.update_layout(
         **plotly_theme(),
-        polar=dict(radialaxis=dict(visible=True, range=[0, 1])),
+        polar=dict(
+            radialaxis=dict(visible=True, range=[0, 1], gridcolor=BORDER_SUBTLE),
+            angularaxis=dict(gridcolor=BORDER_SUBTLE)
+        ),
         title="Corning vs Competitors: Multi-Dimensional Performance",
         height=500
     )
