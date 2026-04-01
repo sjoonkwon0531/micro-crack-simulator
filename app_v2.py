@@ -887,15 +887,15 @@ with tabs[1]:
     a0 = a0_um * 1e-6  # m
     
     # I2: Stress intensity factor range with correct geometry factor
-    sigma_max = max(sigma_glass_cu, sigma_glass_mold) * 1e9  # Pa
+    sigma_max_MPa = max(sigma_glass_cu, sigma_glass_mold) * 1e3  # GPa → MPa
     Y_factor = 1.12  # Y = 1.12 for edge crack (Tada, Paris & Irwin)
-    delta_K = sigma_max * np.sqrt(np.pi * a0) * Y_factor
+    delta_K_MPa = sigma_max_MPa * np.sqrt(np.pi * a0) * Y_factor  # MPa·m^0.5
     
-    # Paris law parameters (typical for glass)
-    C_paris = 1e-11  # m/cycle/(Pa·m^0.5)^m
+    # Paris law parameters (typical for glass, ΔK in MPa·m^0.5)
+    C_paris = 1e-11  # m/cycle/(MPa·m^0.5)^m — typical for brittle glass
     m_paris = 3.0
     
-    cycles, crack_length = paris_law_crack_growth(a0, delta_K, n_cycles_thermal, C_paris, m_paris)
+    cycles, crack_length = paris_law_crack_growth(a0, delta_K_MPa, n_cycles_thermal, C_paris, m_paris)
     
     fig_paris = go.Figure()
     fig_paris.add_trace(go.Scatter(
@@ -937,10 +937,16 @@ with tabs[1]:
     with col1:
         st.metric("Initial Crack", f"{a0_um:.1f} μm")
     with col2:
-        st.metric("Final Crack", f"{final_crack:.1f} μm")
+        if final_crack < 1e6:
+            st.metric("Final Crack", f"{final_crack:.2f} μm")
+        else:
+            st.metric("Final Crack", "⚠️ Overflow")
     with col3:
-        growth_rate = (final_crack - a0_um) / n_cycles_thermal * 1000  # nm/cycle
-        st.metric("Avg Growth Rate", f"{growth_rate:.2f} nm/cycle")
+        growth_rate = (final_crack - a0_um) / max(n_cycles_thermal, 1) * 1000  # nm/cycle
+        if growth_rate < 1e6:
+            st.metric("Avg Growth Rate", f"{growth_rate:.4f} nm/cycle")
+        else:
+            st.metric("Avg Growth Rate", "⚠️ Overflow")
 
 # =============================================================================
 # TAB 3: Inspection Forward Model
