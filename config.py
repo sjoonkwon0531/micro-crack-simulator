@@ -366,6 +366,7 @@ CORNING_GLASS_CORE = {
     # Thermal properties
     "CTE_mean": 4.0e-6,           # [1/K] 4 ppm/K - matched to Si (3.2 ppm/K)
     "CTE_sigma": 0.2e-6,          # [1/K] tight control ±0.2 ppm/K
+    "CTE_spec_range": (3.0e-6, 5.0e-6),  # 1/K — tunable range for Si matching
     "k_thermal": 1.2,             # [W/(m·K)] thermal conductivity
     "cp_specific": 830.0,         # [J/(kg·K)] specific heat
     "T_g": 560.0,                 # [°C] glass transition
@@ -500,6 +501,39 @@ NEG_EAGLEXG = {
     "intergranular_weakness": 1.0,
 }
 
+SCHOTT_AF32_ECO = {
+    "name": "Schott AF32 eco",
+    "type": "alkali_free_glass",
+    "composition": "Alkali-free aluminoborosilicate glass",
+    "application": "MEMS, semiconductor packaging, glass interposer",
+    "notes": "Si-matched CTE (3.2 ppm/K), primary alkali-free glass for advanced packaging",
+    
+    "E_young": 74.0e9,            # Pa (Schott technical glass properties guide)
+    "nu_poisson": 0.21,
+    "rho": 2430.0,                # kg/m³
+    "K_IC": 0.76e6,               # Pa·m^0.5 (estimated from composition class)
+    "K_0_ratio": 0.25,
+    "hardness_vickers": 5.3e9,    # Pa
+    
+    "CTE_mean": 3.2e-6,           # 1/K — almost exactly Si-matched (Si = 2.6-3.2 ppm/K)
+    "CTE_sigma": 0.15e-6,         # 1/K
+    "k_thermal": 1.16,            # W/(m·K)
+    "cp_specific": 820.0,         # J/(kg·K)
+    "T_g": 717.0,                 # °C (Schott datasheet)
+    "T_max_use": 600.0,           # °C
+    
+    "n_visible": 1.51,
+    "transparency": "clear",
+    
+    "scg_n": 19.0,
+    "scg_v0": 1.1e-6,             # m/s
+    "scg_delta_H": 79.0e3,        # J/mol
+    
+    "has_grain_boundaries": False,
+    "crack_deflection_factor": 1.0,
+    "intergranular_weakness": 1.0,
+}
+
 # =============================================================================
 # TGV (Through Glass Via) Processing Parameters
 # =============================================================================
@@ -552,6 +586,50 @@ TGV_PROCESSING = {
 }
 
 # =============================================================================
+# Packaging Stack Materials (for CTE Mismatch Analysis)
+# =============================================================================
+PACKAGING_MATERIALS = {
+    "cu_rdl": {
+        "name": "Copper RDL",
+        "E_young": 120e9,          # Pa
+        "nu_poisson": 0.34,
+        "CTE": 17.0e-6,            # 1/K
+        "rho": 8960.0,             # kg/m³
+        "thickness_range": (5e-6, 15e-6),  # m (5-15 μm)
+        "k_thermal": 401.0,        # W/(m·K)
+    },
+    "mold_compound": {
+        "name": "Epoxy Molding Compound (EMC)",
+        "E_young": 20e9,           # Pa (typical, 15-25 GPa range)
+        "nu_poisson": 0.30,
+        "CTE_below_Tg": 10.0e-6,   # 1/K (7-15 ppm/K range)
+        "CTE_above_Tg": 40.0e-6,   # 1/K (above Tg, CTE increases significantly)
+        "T_g": 150.0,              # °C (typical EMC Tg)
+        "rho": 1900.0,             # kg/m³
+        "thickness_range": (100e-6, 500e-6),  # m (100-500 μm)
+        "k_thermal": 0.8,          # W/(m·K)
+    },
+    "ti_adhesion": {
+        "name": "Titanium Adhesion Layer",
+        "E_young": 116e9,          # Pa
+        "nu_poisson": 0.32,
+        "CTE": 8.6e-6,             # 1/K
+        "rho": 4510.0,             # kg/m³
+        "thickness_range": (20e-9, 100e-9),  # m (20-100 nm)
+        "k_thermal": 21.9,         # W/(m·K)
+    },
+    "silicon_die": {
+        "name": "Silicon Die",
+        "E_young": 170e9,          # Pa (anisotropic average)
+        "nu_poisson": 0.28,
+        "CTE": 2.6e-6,             # 1/K (at RT)
+        "rho": 2330.0,             # kg/m³
+        "thickness_range": (50e-6, 775e-6),  # m
+        "k_thermal": 149.0,        # W/(m·K)
+    },
+}
+
+# =============================================================================
 # Materials Comparison Registry
 # =============================================================================
 MATERIALS_DB = {
@@ -564,6 +642,7 @@ MATERIALS_DB = {
     "agc_an100": AGC_AN100,
     "schott_borofloat": SCHOTT_BOROFLOAT,
     "neg_eaglexg": NEG_EAGLEXG,
+    "schott_af32_eco": SCHOTT_AF32_ECO,
     # Competitors (existing)
     "schott_zerodur": SCHOTT_ZERODUR,
     "ohara_clearceram": OHARA_CLEARCERAM_Z,
@@ -671,7 +750,7 @@ NUCLEATION = {
 # =============================================================================
 PHASE_FIELD = {
     "length_scale": 2.0e-6,          # [m] regularization length l_0
-    "energy_release_rate": 9.0,      # G_c [J/m²] critical energy release rate
+    "energy_release_rate": 8.0,      # G_c [J/m²] aligned with K_IC=0.75 MPa·m^0.5
     "degradation_function": "quadratic",  # (1-d)² or AT1/AT2
     "time_step": 1e-3,               # [s] (normalized)
     "max_iterations": 1000,

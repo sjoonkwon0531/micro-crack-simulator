@@ -240,8 +240,13 @@ class SubcriticalGrowth:
             a_current += da_dN
             
             # Check for unstable growth: K_I = σ * √(π * a) > K_IC
-            # TODO: Fix this - need proper stress field, not hardcoded 100 MPa  
-            estimated_stress = 100e6  # [Pa] - FIXME: should be from actual stress field
+            # CTE mismatch thermal stress: σ = E·Δα·ΔT / (1-ν)
+            E_glass = 73.5e9  # Pa (borosilicate glass core)
+            nu_glass = 0.21
+            CTE_glass = 4.0e-6  # 1/K
+            CTE_cu = 17.0e-6    # 1/K (Cu RDL)
+            delta_T = 200.0      # K (typical thermal cycling range)
+            estimated_stress = E_glass * abs(CTE_cu - CTE_glass) * delta_T / (1 - nu_glass)  # ~242 MPa
             K_I_estimate = estimated_stress * np.sqrt(np.pi * a_current)
             if K_I_estimate > self.K_IC:
                 break
