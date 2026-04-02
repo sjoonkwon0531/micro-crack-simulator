@@ -796,11 +796,14 @@ def train_multifidelity_gp(lf_features: np.ndarray, hf_features: np.ndarray,
     
     # Least squares estimation of ρ and bias
     # y_HF = ρ × y_LF + bias
-    n = len(hf_targets)
-    sum_xy = np.sum(lf_targets * hf_targets)
-    sum_xx = np.sum(lf_targets * lf_targets)
-    sum_y = np.sum(hf_targets)
-    sum_x = np.sum(lf_targets)
+    # Use hf_features (LF predictions for HF samples) paired with hf_targets
+    lf_for_hf = np.asarray(hf_features)  # LF predictions at HF sample locations
+    hf_t = np.asarray(hf_targets)
+    n = len(hf_t)
+    sum_xy = np.sum(lf_for_hf * hf_t)
+    sum_xx = np.sum(lf_for_hf * lf_for_hf)
+    sum_y = np.sum(hf_t)
+    sum_x = np.sum(lf_for_hf)
     
     # Prevent division by zero
     denominator = n * sum_xx - sum_x**2
@@ -812,8 +815,8 @@ def train_multifidelity_gp(lf_features: np.ndarray, hf_features: np.ndarray,
     bias = (sum_y - rho * sum_x) / n
     
     # Compute residual standard deviation
-    predictions = rho * lf_targets + bias
-    residuals = hf_targets - predictions
+    predictions = rho * lf_for_hf + bias
+    residuals = hf_t - predictions
     residual_std = np.std(residuals) if len(residuals) > 1 else 0.1
     
     return {
