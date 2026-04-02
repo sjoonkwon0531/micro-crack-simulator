@@ -61,16 +61,16 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Dark Mode Design System Colors (from DESIGN.md)
+# Light Mode Design System Colors
 # Backgrounds
-CANVAS_BLACK = "#08090a"
-PANEL_DARK = "#0f1011"
-SURFACE = "#191a1b"
-SURFACE_HOVER = "#28282c"
+CANVAS_WHITE = "#ffffff"
+PANEL_LIGHT = "#f7f8fa"
+SURFACE = "#ffffff"
+SURFACE_HOVER = "#f0f2f5"
 
 # Text
-PRIMARY_TEXT = "#f7f8f8"
-SECONDARY_TEXT = "#d0d6e0"
+PRIMARY_TEXT = "#1a1a2e"
+SECONDARY_TEXT = "#4a5568"
 TERTIARY_TEXT = "#8a8f98"
 MUTED_TEXT = "#62666d"
 
@@ -87,18 +87,18 @@ DANGER_RED = "#ef4444"
 PURPLE = "#8b5cf6"
 
 # Borders
-BORDER_SUBTLE = "rgba(255,255,255,0.05)"
-BORDER_STANDARD = "rgba(255,255,255,0.08)"
+BORDER_SUBTLE = "rgba(0,0,0,0.08)"
+BORDER_STANDARD = "rgba(0,0,0,0.10)"
 BORDER_ACCENT = "rgba(0,102,177,0.3)"
 
 # =============================================================================
-# Custom CSS - Dark Mode Professional Theme
+# Custom CSS - Light Mode Professional Theme
 # =============================================================================
 st.markdown(f"""
 <style>
-    /* Base theme - Dark mode */
+    /* Base theme - Light mode */
     .stApp {{ 
-        background-color: {CANVAS_BLACK}; 
+        background-color: {CANVAS_WHITE}; 
         color: {PRIMARY_TEXT};
     }}
     
@@ -125,10 +125,10 @@ st.markdown(f"""
         color: {SECONDARY_TEXT};
     }}
     
-    /* Tabs - Clean dark styling */
+    /* Tabs - Clean light styling */
     .stTabs [data-baseweb="tab-list"] {{ 
         gap: 8px; 
-        background-color: {PANEL_DARK};
+        background-color: {PANEL_LIGHT};
         padding: 12px;
         border-radius: 8px;
         border: 1px solid {BORDER_STANDARD};
@@ -147,29 +147,29 @@ st.markdown(f"""
     
     .stTabs [data-baseweb="tab"]:hover {{
         color: {SECONDARY_TEXT};
-        background-color: rgba(255,255,255,0.03);
+        background-color: {SURFACE_HOVER};
     }}
     
     .stTabs [aria-selected="true"] {{
-        background-color: rgba(0,102,177,0.1); 
+        background-color: rgba(0,102,177,0.08); 
         border-bottom: 2px solid {CORNING_BLUE};
-        color: {CORNING_LIGHT_BLUE};
+        color: {CORNING_BLUE};
         font-weight: 600;
     }}
     
-    /* Metric cards - Premium dark design */
+    /* Metric cards - Premium light design */
     .metric-card {{
-        background: rgba(255,255,255,0.03);
+        background: {SURFACE};
         border-radius: 12px; 
         padding: 20px;
-        border: 1px solid {BORDER_STANDARD};
+        border: 1px solid {BORDER_SUBTLE};
         margin-bottom: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         transition: all 0.2s ease;
     }}
     
     .metric-card:hover {{
-        background: rgba(255,255,255,0.05);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.12);
     }}
     
     .metric-card-success {{
@@ -209,16 +209,16 @@ st.markdown(f"""
     .stAlert {{
         border-radius: 8px;
         border-left-width: 3px;
-        background-color: rgba(255,255,255,0.03);
+        background-color: {SURFACE_HOVER};
     }}
     
     .stAlert [data-testid="stMarkdownContainer"] p {{
         color: {SECONDARY_TEXT};
     }}
     
-    /* Sidebar - Dark panel */
+    /* Sidebar - Light panel */
     section[data-testid="stSidebar"] {{
-        background-color: {PANEL_DARK};
+        background-color: {PANEL_LIGHT};
         border-right: 1px solid {BORDER_STANDARD};
     }}
     
@@ -259,7 +259,7 @@ st.markdown(f"""
         background-color: #0d9668;
     }}
     
-    /* Inputs - Dark themed */
+    /* Inputs - Light themed */
     .stTextInput>div>div>input,
     .stNumberInput>div>div>input,
     .stSelectbox>div>div>div {{
@@ -282,14 +282,15 @@ st.markdown(f"""
     
     /* Expander */
     .streamlit-expanderHeader {{
-        background-color: rgba(255,255,255,0.03);
+        background-color: {SURFACE_HOVER};
         border: 1px solid {BORDER_STANDARD};
         border-radius: 6px;
         color: {SECONDARY_TEXT};
     }}
     
     .streamlit-expanderHeader:hover {{
-        background-color: rgba(255,255,255,0.05);
+        background-color: {SURFACE_HOVER};
+        border-color: {BORDER_ACCENT};
     }}
     
     /* Caption text */
@@ -425,40 +426,40 @@ st.markdown(f"**Selected Material:** {glass_mat['name']} | **Thickness:** {glass
 # =============================================================================
 
 def create_metric_card(label: str, value: str, delta: str = None, card_type: str = "default"):
-    """Create a styled metric card with dark theme."""
+    """Create a styled metric card with light theme."""
     card_class = "metric-card metric-card-" + card_type
     
-    delta_html = f"<p style='margin: 0; font-size: 0.85rem; color: {TERTIARY_TEXT};'>{delta}</p>" if delta else ""
+    delta_html = f"<p style='margin: 0; font-size: 0.85rem; color: {SECONDARY_TEXT};'>{delta}</p>" if delta else ""
     
     return f"""
     <div class='{card_class}'>
-        <p style='margin: 0; font-size: 0.85rem; color: {TERTIARY_TEXT}; font-weight: 500;'>{label}</p>
+        <p style='margin: 0; font-size: 0.85rem; color: {SECONDARY_TEXT}; font-weight: 500;'>{label}</p>
         <p style='margin: 5px 0 0 0; font-size: 1.8rem; font-weight: 700; color: {PRIMARY_TEXT};'>{value}</p>
         {delta_html}
     </div>
     """
 
 def plotly_theme():
-    """Return Plotly layout for dark theme consistency."""
+    """Return Plotly layout for light theme consistency."""
     return dict(
-        template="plotly_dark",
-        paper_bgcolor=PANEL_DARK,
-        plot_bgcolor=PANEL_DARK,
+        template="plotly_white",
+        paper_bgcolor=CANVAS_WHITE,
+        plot_bgcolor=CANVAS_WHITE,
         font=dict(family="Inter, -apple-system, system-ui, sans-serif", size=12, color=SECONDARY_TEXT),
         title_font=dict(size=16, color=PRIMARY_TEXT, family="Inter"),
         colorway=[CORNING_BLUE, CORNING_LIGHT_BLUE, SUCCESS_GREEN, WARNING_ORANGE, DANGER_RED, PURPLE],
         xaxis=dict(
-            gridcolor=BORDER_SUBTLE,
+            gridcolor="rgba(0,0,0,0.06)",
             zerolinecolor=BORDER_STANDARD,
             color=SECONDARY_TEXT
         ),
         yaxis=dict(
-            gridcolor=BORDER_SUBTLE,
+            gridcolor="rgba(0,0,0,0.06)",
             zerolinecolor=BORDER_STANDARD,
             color=SECONDARY_TEXT
         ),
         legend=dict(
-            bgcolor="rgba(0,0,0,0)",
+            bgcolor="rgba(255,255,255,0.9)",
             bordercolor=BORDER_STANDARD,
             font=dict(color=SECONDARY_TEXT)
         )
